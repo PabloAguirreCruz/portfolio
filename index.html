@@ -275,6 +275,14 @@
       transform: translateZ(24px);
     }
 
+    .profile-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      display: block;
+    }
+
     .hero-title {
       font-family: "Space Grotesk", Inter, sans-serif;
       font-size: clamp(2.35rem, 6.35vw, 5.95rem);
@@ -991,7 +999,7 @@
     <section id="home" class="section">
       <div class="container hero-grid reveal" style="--delay: 40ms;">
         <div class="photo-shell">
-          <div class="photo-placeholder" aria-label="Photo placeholder">PA</div>
+          <img src="./photo.jpg" alt="Pablo Aguirre Cruz profile photo" class="profile-photo" />
         </div>
         <div class="hero-content">
           <p class="section-kicker">Portfolio</p>
