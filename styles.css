@@ -661,6 +661,12 @@ svg path{
   font-weight:600;
 }
 
+.chip-row small{
+  color:var(--dim);
+  font-size:.58rem;
+  letter-spacing:.08em;
+}
+
 .project-actions{
   margin-top:28px;
 }
