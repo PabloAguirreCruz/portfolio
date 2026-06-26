@@ -241,9 +241,10 @@
           <label>Name<input name="name" type="text" autocomplete="name" required /></label>
           <label>Email<input name="email" type="email" autocomplete="email" required /></label>
           <label>Message<textarea name="message" rows="5" required></textarea></label>
+          <p class="form-status" role="status" aria-live="polite"></p>
           <button class="button button-primary" type="submit">
             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m4 12 16-8-5 16-3-7-8-1Zm8 1 8-9"/></svg>
-            Send message
+            <span class="button-label">Send message</span>
           </button>
         </form>
         <div class="success-state" role="status" aria-live="polite">
@@ -309,9 +310,48 @@
       });
     });
 
-    contactForm.addEventListener("submit", (event) => {
+    const formStatus = contactForm.querySelector(".form-status");
+    const submitButton = contactForm.querySelector("button[type='submit']");
+    const submitLabel = contactForm.querySelector(".button-label");
+
+    contactForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      contactForm.closest(".contact-card").classList.add("is-sent");
+      const contactCard = contactForm.closest(".contact-card");
+      const formData = new FormData(contactForm);
+      const payload = {
+        name: formData.get("name"),
+        email: formData.get("email"),
+        message: formData.get("message")
+      };
+
+      formStatus.textContent = "";
+      formStatus.classList.remove("is-error");
+      contactCard.classList.remove("is-sent");
+      submitButton.disabled = true;
+      submitLabel.textContent = "Sending...";
+
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(result.error || "Unable to send message.");
+        }
+
+        contactForm.reset();
+        contactCard.classList.add("is-sent");
+      } catch (error) {
+        formStatus.textContent = "Something went wrong — please email me directly at p.cruz8@yahoo.com";
+        formStatus.classList.add("is-error");
+      } finally {
+        submitButton.disabled = false;
+        submitLabel.textContent = "Send message";
+      }
     });
 
     avatarImage.addEventListener("error", () => {
